@@ -1,26 +1,89 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
+# Set the type of Mapbox SDK to use
+# This value is used by $RNMapboxMaps
+$RNMapboxMapsImpl = 'mapbox'
+$VCDisableFrameProcessors = true
 
-platform :ios, '12.4'
-install! 'cocoapods', :deterministic_uuids => false
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
+
+# Our min supported iOS version is higher than the default (min_ios_version_supported) to support libraires such as Airship
+platform :ios, 14.0
+prepare_react_native_project!
+
+
+setup_permissions([
+  'Camera',
+  'LocationAccuracy',
+  'LocationAlways',
+  'LocationWhenInUse'
+])
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+# Force pods to match minimum iOS version for React Native
+# Fixes build issue on Xcode Cloud where some pods
+# Use iOS 12 calls despite being set as iOS 11
+def __apply_Xcode_14_3_RC_post_install_workaround(installer)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      current_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      minimum_target = min_ios_version_supported
+      if current_target.to_f < minimum_target.to_f
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = minimum_target
+      end
+    end
+  end
+end
+
+# Configure Mapbox before installing dependencies
+pre_install do |installer|
+  $RNMapboxMaps.pre_install(installer)
+end
 
 target 'NewExpensify' do
+  use_expo_modules!
+  post_integrate do |installer|
+    begin
+      expo_patch_react_imports!(installer)
+    rescue => e
+      Pod::UI.warn e
+    end
+  end
   permissions_path = '../node_modules/react-native-permissions/ios'
 
-  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
-  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
-  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  project 'NewExpensify',
+    'DebugDevelopment' => :debug,
+    'DebugAdHoc' => :debug,
+    'DebugProduction' => :debug,
+    'ReleaseDevelopment' => :release,
+    'ReleaseAdHoc' => :release,
+    'ReleaseProduction' => :release,
+    'Debug' => :debug
 
   config = use_native_modules!
 
   # Flags change depending on the env values.
   flags = get_default_flags()
 
+  # ENV Variable enables/disables TurboModules
+  ENV['RCT_NEW_ARCH_ENABLED'] = '1';
+
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => true,
-    :fabric_enabled => flags[:fabric_enabled],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -31,24 +94,18 @@ target 'NewExpensify' do
     # Pods for testing
   end
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable the next line.
-  use_flipper!()
-
   post_install do |installer|
+    # Configure Mapbox after installation
+    $RNMapboxMaps.post_install(installer)
+
+    # https://github.com/facebook/react-native/blob/main/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
-      :mac_catalyst_enabled => false
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
-
-    installer.pods_project.build_configurations.each do |config|
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-    end
+    __apply_Xcode_14_3_RC_post_install_workaround(installer)
 
     installer.pods_project.targets.each do |target|
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
@@ -59,3 +116,10 @@ target 'NewExpensify' do
     end
   end
 end
+
+target 'NotificationServiceExtension' do
+  pod 'AirshipServiceExtension'
+  pod 'AppLogs', :path => '../node_modules/react-native-app-logs/AppLogsPod'
+end
+
+pod 'FullStory', :http => 'https://ios-releases.fullstory.com/fullstory-1.52.0-xcframework.tar.gz'

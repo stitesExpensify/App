@@ -2,19 +2,19 @@
     "applinks": {
         "details": [
             {
-                "appIDs": ["368M544MTT.com.chat.expensify.chat"],
+                "appIDs": ["368M544MTT.com.chat.expensify.chat", "452835FXHF.com.expensify.expensifylite"],
                 "components": [
                     {
                        "/": "/r/*",
                        "comment": "Reports"
                     },
                     {
-                        "/": "/settings/*",
-                        "comment": "Profile and app settings"
+                        "/": "/a/*",
+                        "comment": "Profile Page"
                     },
                     {
-                        "/": "/setpassword/*",
-                        "comment": "Passoword setup"
+                        "/": "/settings/*",
+                        "comment": "Profile and app settings"
                     },
                     {
                         "/": "/details/*",
@@ -47,12 +47,64 @@
                     {
                         "/": "/concierge/*",
                         "comment": "Concierge"
+                    },
+                    {
+                        "/": "/split/*",
+                        "comment": "Split Expense"
+                    },
+                    {
+                        "/": "/submit/*",
+                        "comment": "Submit Expense"
+                    },
+                    {
+                        "/": "/request/*",
+                        "comment": "Submit Expense"
+                    },
+                    {
+                        "/": "/new/*",
+                        "comment": "New Chat"
+                    },
+                    {
+                        "/": "/workspace/*",
+                        "comment": "Workspace Details"
+                    },
+                    {
+                        "/": "/get-assistance/*",
+                        "comment": "Get Assistance Pages"
+                    },
+                    {
+                        "/": "/teachersunite/*",
+                        "comment": "Teachers Unite!"
+                    },
+                    {
+                        "/": "/search/*",
+                        "comment": "Search"
+                    },
+                    {
+                        "/": "/pay/*",
+                        "comment": "Pay someone"
+                    },
+                    {
+                        "/": "/send/*",
+                        "comment": "Pay someone"
+                    },
+                    {
+                        "/": "/money2020/*",
+                        "comment": "Money 2020"
+                    },
+                    {
+                        "/": "/track-expense/*",
+                        "comment": "Track Expense"
+                    },
+                    {
+                        "/": "/submit-expense/*",
+                        "comment": "Submit Expense"
                     }
                 ]
             }
         ]
     },
     "webcredentials": {
-        "apps": ["368M544MTT.com.chat.expensify.chat"]
+        "apps": ["368M544MTT.com.chat.expensify.chat", "452835FXHF.com.expensify.expensifylite"]
     }
 }

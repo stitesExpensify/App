@@ -1,240 +1,158 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
 apply plugin: "com.google.firebase.firebase-perf"
+apply plugin: "fullstory"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
-import com.android.build.OutputFile
-import org.apache.tools.ant.taskdefs.condition.Os
-
 /**
- * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
- * and bundleReleaseJsAndAssets).
- * These basically call `react-native bundle` with the correct arguments during the Android build
- * cycle. By default, bundleDebugJsAndAssets is skipped, as in debug/dev mode we prefer to load the
- * bundle directly from the development server. Below you can see all the possible configurations
- * and their defaults. If you decide to add a configuration block, make sure to add it before the
- * `apply from: "../../node_modules/react-native/react.gradle"` line.
- *
- * project.ext.react = [
- *   // the name of the generated asset file containing your JS bundle
- *   bundleAssetName: "index.android.bundle",
- *
- *   // the entry file for bundle generation. If none specified and
- *   // "index.android.js" exists, it will be used. Otherwise "index.js" is
- *   // default. Can be overridden with ENTRY_FILE environment variable.
- *   entryFile: "index.android.js",
- *
- *   // https://reactnative.dev/docs/performance#enable-the-ram-format
- *   bundleCommand: "ram-bundle",
- *
- *   // whether to bundle JS and assets in debug mode
- *   bundleInDebug: false,
- *
- *   // whether to bundle JS and assets in release mode
- *   bundleInRelease: true,
- *
- *   // whether to bundle JS and assets in another build variant (if configured).
- *   // See http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Build-Variants
- *   // The configuration property can be in the following formats
- *   //         'bundleIn${productFlavor}${buildType}'
- *   //         'bundleIn${buildType}'
- *   // bundleInFreeDebug: true,
- *   // bundleInPaidRelease: true,
- *   // bundleInBeta: true,
- *
- *   // whether to disable dev mode in custom build variants (by default only disabled in release)
- *   // for example: to disable dev mode in the staging build type (if configured)
- *   devDisabledInStaging: true,
- *   // The configuration property can be in the following formats
- *   //         'devDisabledIn${productFlavor}${buildType}'
- *   //         'devDisabledIn${buildType}'
- *
- *   // the root of your project, i.e. where "package.json" lives
- *   root: "../../",
- *
- *   // where to put the JS bundle asset in debug mode
- *   jsBundleDirDebug: "$buildDir/intermediates/assets/debug",
- *
- *   // where to put the JS bundle asset in release mode
- *   jsBundleDirRelease: "$buildDir/intermediates/assets/release",
- *
- *   // where to put drawable resources / React Native assets, e.g. the ones you use via
- *   // require('./image.png')), in debug mode
- *   resourcesDirDebug: "$buildDir/intermediates/res/merged/debug",
- *
- *   // where to put drawable resources / React Native assets, e.g. the ones you use via
- *   // require('./image.png')), in release mode
- *   resourcesDirRelease: "$buildDir/intermediates/res/merged/release",
- *
- *   // by default the gradle tasks are skipped if none of the JS files or assets change; this means
- *   // that we don't look at files in android/ or ios/ to determine whether the tasks are up to
- *   // date; if you have any other folders that you want to ignore for performance reasons (gradle
- *   // indexes the entire tree), add them here. Alternatively, if you have JS files in android/
- *   // for example, you might want to remove it from here.
- *   inputExcludes: ["android/**", "ios/**"],
- *
- *   // override which node gets called and with what additional arguments
- *   nodeExecutableAndArgs: ["node"],
- *
- *   // supply additional arguments to the packager
- *   extraPackagerArgs: []
- * ]
+ * This is the configuration block to customize your React Native Android app.
+ * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
 
-project.ext.react = [
-    enableHermes: true,  // clean and rebuild if changing
-]
+/* Fullstory settings */
+fullstory {
+    org 'o-1WN56P-na1'
+    enabledVariants 'production'
+    logcatLevel 'debug'
+    recordOnStart false
+}
+
+react {
+    /* Folders */
+    //   The root of your project, i.e. where "package.json" lives. Default is '..'
+    // root = file("../../")
+    //   The folder where the react-native NPM package is. Default is ../../node_modules/react-native
+    // reactNativeDir = file("../../node_modules/react-native")
+    //   The folder where the react-native Codegen package is. Default is ../../node_modules/@react-native/codegen
+    // codegenDir = file("../../node_modules/@react-native/codegen")
+    //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
+    // cliFile = file("../../node_modules/react-native/cli.js")
+
+    /* Variants */
+    //   The list of variants to that are debuggable. For those we're going to
+    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
+    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
+    debuggableVariants = ["developmentDebug", "productionDebug"]
+
+    /* Bundling */
+    //   A list containing the node command and its flags. Default is just 'node'.
+    // nodeExecutableAndArgs = ["node"]
+    //
+    //   The command to run when bundling. By default is 'bundle'
+    // bundleCommand = "ram-bundle"
+    //
+    //   The path to the CLI configuration file. Default is empty.
+    // bundleConfig = file(../rn-cli.config.js)
+    //
+    //   The name of the generated asset file containing your JS bundle
+    // bundleAssetName = "MyApplication.android.bundle"
+    //
+    //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
+    // entryFile = file("../js/MyApplication.android.js")
+    //
+    //   A list of extra flags to pass to the 'bundle' commands.
+    //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
+    // extraPackagerArgs = []
+
+    /* Hermes Commands */
+    //   The hermes compiler command to run. By default it is 'hermesc'
+    // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
+    //
+    //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
+    // hermesFlags = ["-O", "-output-source-map"]
+    //
+    /* Autolinking */
+    autolinkLibrariesWithApp()
+    // Added by install-expo-modules
+    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", rootDir.getAbsoluteFile().getParentFile().getAbsolutePath(), "android", "absolute"].execute(null, rootDir).text.trim())
+    cliFile = new File(["node", "--print", "require.resolve('@expo/cli')"].execute(null, rootDir).text.trim())
+    bundleCommand = "export:embed"
+}
 
 project.ext.envConfigFiles = [
-    debug: ".env",
-    release: ".env.production",
+    productionDebug: ".env.production",
+    productionRelease: ".env.production",
+    adhocRelease: ".env.adhoc",
+    developmentRelease: ".env",
+    developmentDebug: ".env",
+    e2eRelease: "tests/e2e/.env.e2e",
+    e2edeltaRelease: "tests/e2e/.env.e2edelta"
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
-
 /**
- * Set this to true to create two separate APKs instead of one:
- *   - An APK that only works on ARM devices
- *   - An APK that only works on x86 devices
- * The advantage is the size of the APK is reduced by about 4MB.
- * Upload all the APKs to the Play Store and people will download
- * the correct one based on the CPU architecture of their device.
+ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableProguardInReleaseBuilds = true
 
 /**
- * Run Proguard to shrink the Java bytecode in release builds.
- */
-def enableProguardInReleaseBuilds = false
-
-/**
- * The preferred build flavor of JavaScriptCore.
+ * The preferred build flavor of JavaScriptCore (JSC)
  *
  * For example, to use the international variant, you can use:
  * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
- * give correct results when using with locales other than en-US.  Note that
+ * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
-/**
- * Whether to enable the Hermes VM.
- *
- * This should be set on project.ext.react and that value will be read here. If it is not set
- * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
- * and the benefits of using Hermes will therefore be sharply reduced.
- */
-def enableHermes = project.ext.react.get("enableHermes", false);
-
-/**
- * Architectures to build native code for.
- */
-def reactNativeArchitectures() {
-    def value = project.getProperties().get("reactNativeArchitectures")
-    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
-}
-
 android {
+    ndkVersion rootProject.ext.ndkVersion
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    packagingOptions {
-        pickFirst 'lib/x86/libc++_shared.so'
-        pickFirst 'lib/x86_64/libjsc.so'
-        pickFirst 'lib/arm64-v8a/libjsc.so'
-        pickFirst 'lib/arm64-v8a/libc++_shared.so'
-        pickFirst 'lib/x86_64/libc++_shared.so'
-        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
-
-        // Exclude generated files from APK, to fix 'More than one file was found with path' error
-        exclude 'META-INF/*'
-    }
-
+    namespace "com.expensify.chat"
     defaultConfig {
         applicationId "com.expensify.chat"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled rootProject.ext.multiDexEnabled
-        versionCode 1001028500
-        versionName "1.2.85-0"
-        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        versionCode 1009005401
+        versionName "9.0.54-1"
+        // Supported language variants must be declared here to avoid from being removed during the compilation.
+        // This also helps us to not include unnecessary language variants in the APK.
+        resConfigs "en", "es"
+    }
 
-        if (isNewArchitectureEnabled()) {
-            // We configure the CMake build only if you decide to opt-in for the New Architecture.
-            externalNativeBuild {
-                cmake {
-                    arguments "-DPROJECT_BUILD_DIR=$buildDir",
-                        "-DREACT_ANDROID_DIR=$rootDir/../node_modules/react-native/ReactAndroid",
-                        "-DREACT_ANDROID_BUILD_DIR=$rootDir/../node_modules/react-native/ReactAndroid/build",
-                        "-DNODE_MODULES_DIR=$rootDir/../node_modules",
-                        "-DANDROID_STL=c++_shared"
-                }
-            }
-            if (!enableSeparateBuildPerCPUArchitecture) {
-                ndk {
-                    abiFilters (*reactNativeArchitectures())
-                }
-            }
+    flavorDimensions "default"
+    productFlavors {
+        // we need to define a production flavor but since it has default config, we can leave it empty
+        production
+        e2e {
+            // If  are building a version that won't be uploaded to the play store, we don't have to use production keys
+            // applies all non-production flavors
+            applicationIdSuffix ".e2e"
+            signingConfig signingConfigs.debug
+            resValue "string", "build_config_package", "com.expensify.chat"
+        }
+        e2edelta {
+            // If  are building a version that won't be uploaded to the play store, we don't have to use production keys
+            // applies all non-production flavors
+            applicationIdSuffix ".e2edelta"
+            signingConfig signingConfigs.debug
+            resValue "string", "build_config_package", "com.expensify.chat"
+        }
+        adhoc {
+            applicationIdSuffix ".adhoc"
+            signingConfig signingConfigs.debug
+            resValue "string", "build_config_package", "com.expensify.chat"
+        }
+        development {
+            applicationIdSuffix ".dev"
+            signingConfig signingConfigs.debug
+            resValue "string", "build_config_package", "com.expensify.chat"
         }
     }
 
-    if (isNewArchitectureEnabled()) {
-        // We configure the NDK build only if you decide to opt-in for the New Architecture.
-        externalNativeBuild {
-            cmake {
-                path "$projectDir/src/main/jni/CMakeLists.txt"
-            }
-        }
-        def reactAndroidProjectDir = project(':ReactAndroid').projectDir
-        def packageReactNdkDebugLibs = tasks.register("packageReactNdkDebugLibs", Copy) {
-            dependsOn(":ReactAndroid:packageReactNdkDebugLibsForBuck")
-            from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
-            into("$buildDir/react-ndk/exported")
-        }
-        def packageReactNdkReleaseLibs = tasks.register("packageReactNdkReleaseLibs", Copy) {
-            dependsOn(":ReactAndroid:packageReactNdkReleaseLibsForBuck")
-            from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
-            into("$buildDir/react-ndk/exported")
-        }
-        afterEvaluate {
-            // If you wish to add a custom TurboModule or component locally,
-            // you should uncomment this line.
-            // preBuild.dependsOn("generateCodegenArtifactsFromSchema")
-            preDebugBuild.dependsOn(packageReactNdkDebugLibs)
-            preReleaseBuild.dependsOn(packageReactNdkReleaseLibs)
-            // Due to a bug inside AGP, we have to explicitly set a dependency
-            // between configureCMakeDebug* tasks and the preBuild tasks.
-            // This can be removed once this is solved: https://issuetracker.google.com/issues/207403732
-            configureCMakeRelWithDebInfo.dependsOn(preReleaseBuild)
-            configureCMakeDebug.dependsOn(preDebugBuild)
-            reactNativeArchitectures().each { architecture ->
-                tasks.findByName("configureCMakeDebug[${architecture}]")?.configure {
-                    dependsOn("preDebugBuild")
-                }
-                tasks.findByName("configureCMakeRelWithDebInfo[${architecture}]")?.configure {
-                    dependsOn("preReleaseBuild")
-                }
-            }
-        }
-    }
-
-    splits {
-        abi {
-            reset()
-            enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
-            include (*reactNativeArchitectures())
-        }
-    }
     signingConfigs {
         release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
-            }
+            storeFile file(MYAPP_UPLOAD_STORE_FILE)
+            storePassword System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
+            keyAlias MYAPP_UPLOAD_KEY_ALIAS
+            keyPassword System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
         }
         debug {
             storeFile file('debug.keystore')
@@ -248,69 +166,56 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            signingConfig signingConfigs.release
+            productFlavors.production.signingConfig signingConfigs.release
+            shrinkResources enableProguardInReleaseBuilds
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-        // We need a custom build type, so we can allow http clear text traffic in a release build:
-        e2eRelease {
-            initWith release
-            matchingFallbacks = ['release']
-            signingConfig signingConfigs.debug
-        }
-        internalRelease {
-            initWith release
-            matchingFallbacks = ['release']
-            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+
+            signingConfig null
+            // buildTypes take precedence over productFlavors when it comes to the signing configuration,
+            // thus we need to manually set the signing config, so that the e2e uses the debug config again.
+            // In other words, the signingConfig setting above will be ignored when we build the flavor in release mode.
+            productFlavors.all { flavor ->
+                // All release builds should be signed with the release config ...
+                flavor.signingConfig signingConfigs.release
+            }
+            // ... except for the e2e flavor, which we maybe want to build locally:
+            productFlavors.e2e.signingConfig signingConfigs.debug
+            productFlavors.e2edelta.signingConfig signingConfigs.debug
         }
     }
 
-    // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            // For each separate APK per architecture, set a unique version code as described here:
-            // https://developer.android.com/studio/build/configure-apk-splits.html
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
-            def abi = output.getFilter(OutputFile.ABI)
-            if (abi != null) {  // null for the universal-debug, universal-release variants
-                output.versionCodeOverride =
-                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
-            }
+    // since we don't need variants adhocDebug and e2eDebug, we can force gradle to ignore them
+    variantFilter { variant ->
+        if (variant.name == "adhocDebug" || variant.name == "e2eDebug" || variant.name == "e2edeltaDebug") {
+            setIgnore(true)
+        }
+    }
+}
 
+afterEvaluate {
+    // As the App is building from source, we need to make sure hermesc is built before the JS bundle is created.
+    // Otherwise the release version of the app will fail to build due to missing hermesc.
+    def hermesCTask = gradle.includedBuild("react-native").task(":packages:react-native:ReactAndroid:hermes-engine:buildHermesC")
+
+    android.applicationVariants.configureEach { variant ->
+        if (variant.buildType.name == "release") {
+            def variantName = variant.name.capitalize()
+            def bundleTask = tasks.named("createBundle${variantName}JsAndAssets").getOrNull()
+
+            if (bundleTask != null) {
+                bundleTask.dependsOn(hermesCTask)
+            }
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation("com.facebook.react:react-android")
 
-    //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
-    def lifecycle_version = "2.5.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-      exclude group:'com.facebook.fbjni'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.flipper'
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.flipper'
-    }
-
-    if (enableHermes) {
-        //noinspection GradleDynamicVersion
-        implementation("com.facebook.react:hermes-engine:+") { // From node_modules
-            exclude group:'com.facebook.fbjni'
-        }
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
@@ -324,53 +229,24 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.5.0'
     implementation 'com.facebook.fresco:animated-gif:2.5.0'
 
-    // Android support library
-    implementation 'com.android.support:support-core-utils:28.0.0'
+    // AndroidX support library
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
 
     // Multi Dex Support: https://developer.android.com/studio/build/multidex#mdex-gradle
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // Plaid SDK
     implementation project(':react-native-plaid-link-sdk')
+
+    // Fixes a version conflict between airship and react-native-plaid-link-sdk
+    // This may be fixed by a newer version of the plaid SDK (not working as of 10.0.0)
+    implementation "androidx.work:work-runtime-ktx:2.8.0"
+
     // This okhttp3 dependency prevents the app from crashing - See https://github.com/plaid/react-native-plaid-link-sdk/issues/74#issuecomment-648435002
     implementation "com.squareup.okhttp3:okhttp-urlconnection:4.+"
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
 }
 
-if (isNewArchitectureEnabled()) {
-    // If new architecture is enabled, we let you build RN from source
-    // Otherwise we fallback to a prebuilt .aar bundled in the NPM package.
-    // This will be applied to all the imported transtitive dependency.
-    configurations.all {
-        resolutionStrategy.dependencySubstitution {
-            substitute(module("com.facebook.react:react-native"))
-                    .using(project(":ReactAndroid"))
-                    .because("On New Architecture we're building React Native from source")
-            substitute(module("com.facebook.react:hermes-engine"))
-                    .using(project(":ReactAndroid:hermes-engine"))
-                    .because("On New Architecture we're building Hermes from source")
-        }
-    }
-}
-
-// Run this once to be able to run the application with BUCK
-// puts all compile dependencies into folder libs for BUCK to use
-task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.implementation
-    into 'libs'
-}
-
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
-def googleServicesFile = rootProject.file('app/google-services.json')
-if (googleServicesFile.exists()) {
-    apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
-}
+apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
 apply plugin: 'com.google.firebase.crashlytics'
-
-def isNewArchitectureEnabled() {
-    // To opt-in for the New Architecture, you can either:
-    // - Set `newArchEnabled` to true inside the `gradle.properties` file
-    // - Invoke gradle with `-newArchEnabled=true`
-    // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
-    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
-}
-
